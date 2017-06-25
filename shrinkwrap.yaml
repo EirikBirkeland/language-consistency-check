@@ -1,0 +1,12 @@
+dependencies: {}
+devDependencies:
+  lodash.isarray: 4.0.0
+packages:
+  /lodash.isarray/4.0.0:
+    dev: true
+    resolution:
+      integrity: sha1-KspJayjEym1yZxUxNZDALm6jRAM=
+registry: 'https://registry.npmjs.org/'
+shrinkwrapVersion: 3
+specifiers:
+  lodash.isarray: ^4.0.0
