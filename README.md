@@ -24,8 +24,3 @@ None
 
 - [ava](https://github.com/avajs/ava): Futuristic test runner 🚀
 - [lodash.isarray](): The lodash method `_.isArray` exported as a module.
-
-
-## License
-
-MIT
