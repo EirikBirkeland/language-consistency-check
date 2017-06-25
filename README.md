@@ -9,18 +9,23 @@ npm install lqa-consistency-check --save
 ```
 
 
-## Tests
+## Usage
 
-```sh
-npm install
-npm test
+```js
+    const checkConsistency = require('lqa-consistency-check')
+    console.log(
+        checkConsistency(
+            {
+                indexToTest: 0,
+                sourceStrings: ['A', 'B', 'C', 'A'],
+                targetStrings: ['I', 'II', 'III', 'IV']
+            }
+        )
+    )
 ```
 
-## Dependencies
+## API
 
-None
+## License
 
-## Dev Dependencies
-
-- [ava](https://github.com/avajs/ava): Futuristic test runner 🚀
-- [lodash.isarray](): The lodash method `_.isArray` exported as a module.
+MIT © Eirik Birkeland

@@ -1,4 +1,4 @@
-// MIT © 2016 Eirik Birkeland. All rights reserved.
+// MIT © Eirik Birkeland
 /**
  * Created by eb on 2017/06/25.
  */
@@ -10,17 +10,27 @@
  * @param opts.sourceStrings {string[]} - an array of source strings (original text)
  * @param opts.targetStrings {string[]} - an array of target strings (the translated text)
  * @param opts.logger {Function} - optional logger; /dev/null by default
+ * @param opts.invert {Boolean} - whether to invert source/target
  * @return {{inconsistentIds, report}} - returns a report object
  */
-function checkConsistency (opts) {
+function checkConsistency(opts) {
     const {
         indexToTest,
         sourceStrings,
         targetStrings,
         logger = function () {
-        }
+        },
+        invert
     } = opts
 
+    const strings1 = invert ? targetStrings : sourceStrings
+    const strings2 = invert ? sourceStrings : targetStrings
+
+    /**
+     *
+     * @param indexToTest {number} - the index of strings1 to test
+     * @returns {*}
+     */
     function runCheck(indexToTest) {
         const dupeSegIds = []
         const inconsistentIds = []
@@ -31,7 +41,7 @@ function checkConsistency (opts) {
 
                 // Check not equal
                 dupeSegIds.forEach((ele) => {
-                    if (targetStrings[indexToTest] !== targetStrings[ele]) {
+                    if (strings2[indexToTest] !== strings2[ele]) {
                         logger('Pushing ID to inconsistentIds')
                         inconsistentIds.push(ele)
                     }
@@ -41,28 +51,19 @@ function checkConsistency (opts) {
             }
         }
 
-        const _getReport = (() => {
-            if (inconsistentIds.length === 1)
-                return (`String(s) ${inconsistentIds.map($_ => $_).join(', ')} is inconsistent with indexToTest, ${indexToTest}.`)
-            else if (inconsistentIds.length > 1)
-                return (`String(s) ${inconsistentIds.map($_ => $_).join(', ')} are inconsistent with indexToTest, ${indexToTest}.`)
-            else
-                return null // "No inconsistent ids found"
-        })()
-
         function _hasDupes() {
-            return sourceStrings.some((ele, i) => {
+            return strings1.some((ele, i) => {
                 if (i !== indexToTest &&
-                    sourceStrings[i] === sourceStrings[indexToTest]) {
+                    strings1[i] === strings1[indexToTest]) {
                     return true
                 }
             })
         }
 
         function _getDupes() {
-            sourceStrings.forEach((ele, i) => {
+            strings1.forEach((ele, i) => {
                 if (i !== indexToTest &&
-                    sourceStrings[i] === sourceStrings[indexToTest]) {
+                    strings1[i] === strings1[indexToTest]) {
                     logger('Adding a dupe to accumulator')
                     dupeSegIds.push(i)
                 }
@@ -70,17 +71,32 @@ function checkConsistency (opts) {
         }
 
         if (inconsistentIds.length) {
-            return {
-                inconsistentIds: inconsistentIds.length ? inconsistentIds : null,
-                report: _getReport
-            }
+            return inconsistentIds.length ? inconsistentIds : null
         }
     }
 
+    const results = runCheck(indexToTest)
+
     if (typeof indexToTest !== "undefined") {
-        return runCheck(indexToTest)
+        return {
+            inconsistentIds: results.length ? results : null,
+            report: _getReport(results)
+        }
     } else {
-        return sourceStrings.map((ele, i) => runCheck(i)).filter(ele => !!ele)
+        return strings1.map((ele, i) => _getReport(runCheck(i))).filter(ele => !!ele)
+    }
+
+    /**
+     *
+     * @param inconsistentIds {strings[]}
+     * @returns {*}
+     * @private
+     */
+    function _getReport(inconsistentIds) {
+        if (inconsistentIds && inconsistentIds.length >= 1)
+            return (`${invert ? 'Source' : 'Target'} string(s) ${inconsistentIds.map($_ => $_).join(', ')} ${inconsistentIds.length === 1 ? 'is' : 'are'} inconsistent with ${invert ? 'Target' : 'Source'} index, ${indexToTest}.`)
+        else
+            return null // "No inconsistent ids found"
     }
 }
 
