@@ -1,6 +1,6 @@
 {
   "name": "lqa-consistency-check",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "",
   "main": "consistency-spec.js",
   "scripts": {
