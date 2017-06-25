@@ -4,7 +4,7 @@
   "description": "",
   "main": "consistency-spec.js",
   "scripts": {
-    "test": "ava"
+    "test": "ava index-spec.js"
   },
   "author": "Eirik Birkeland",
   "license": "MIT",
