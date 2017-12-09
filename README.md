@@ -1,5 +1,7 @@
 # lqa-consistency-check 
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/EirikBirkeland/translation-consistency-check.svg)](https://greenkeeper.io/)
+
 
 
 ## Installation
